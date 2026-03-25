@@ -746,7 +746,7 @@ html,body,#root{width:100%;height:100%;background:#0a0603;overflow:hidden;}
 @keyframes hintPulse{0%,100%{opacity:0.4;}50%{opacity:0.9;}}
 
 /* INVITE PAGE */
-.invite-page{z-index:100;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;background:#0d0804;}
+.invite-page{z-index:100;overflow-y:scroll;overflow-x:hidden;-webkit-overflow-scrolling:touch;overscroll-behavior-y:contain;background:#0d0804;}
 .bg-fixed{position:fixed;inset:0;z-index:0;pointer-events:none;}
 .bg-fixed img{width:100%;height:100%;object-fit:cover;object-position:center;filter:brightness(0.18) saturate(0.6);will-change:transform;}
 .bg-fixed::after{content:'';position:absolute;inset:0;background:rgba(8,4,2,0.55);}
