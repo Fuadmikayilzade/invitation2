@@ -721,13 +721,14 @@ const IMG_CRIM   = "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQEASABIAAD/2wBDAAYEB
 const css = `
 @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Cinzel:wght@400;600&family=EB+Garamond:ital,wght@0,400;0,500;1,400&display=swap');
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
-html,body,#root{width:100%;height:100%;background:#0a0603;overflow:hidden;}
-.page{position:fixed;inset:0;transition:opacity 1.4s ease;}
+html,body{width:100%;height:100%;background:#0a0603;overflow:hidden;position:fixed;top:0;left:0;}
+#root{width:100%;height:100%;overflow:hidden;}
+.page{position:fixed;top:0;left:0;right:0;bottom:0;width:100%;height:100%;transition:opacity 1.4s ease;}
 .page.hidden{opacity:0;pointer-events:none;}
 .page.gone{display:none;}
 
 /* SPLASH — full screen envelope photo */
-.splash{background:#0a0603;z-index:200;cursor:pointer;overflow:hidden;}
+.splash{background:#0a0603;z-index:200;cursor:pointer;overflow:hidden;-webkit-tap-highlight-color:transparent;}
 .splash-video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center;}
 .splash-overlay{position:absolute;inset:0;background:linear-gradient(to bottom,rgba(5,2,1,0.1) 0%,rgba(5,2,1,0.25) 60%,rgba(5,2,1,0.85) 100%);}
 .splash-bottom{position:absolute;bottom:0;left:0;right:0;padding:0 0 max(52px,env(safe-area-inset-bottom,52px));text-align:center;z-index:3;}
@@ -740,7 +741,7 @@ html,body,#root{width:100%;height:100%;background:#0a0603;overflow:hidden;}
 @keyframes hintPulse{0%,100%{opacity:0.4;}50%{opacity:0.9;}}
 
 /* INVITE PAGE */
-.invite-page{z-index:100;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;background:#0d0804;}
+.invite-page{z-index:100;overflow-y:scroll;overflow-x:hidden;-webkit-overflow-scrolling:touch;background:#0d0804;overscroll-behavior-y:contain;}
 .bg-fixed{position:fixed;inset:0;z-index:0;pointer-events:none;}
 .bg-fixed img{width:100%;height:100%;object-fit:cover;object-position:center;filter:brightness(0.18) saturate(0.6);will-change:transform;}
 .bg-fixed::after{content:'';position:absolute;inset:0;background:rgba(8,4,2,0.55);}
@@ -1200,6 +1201,18 @@ export default function App() {
     setCopyLabel("Kopyalandı ✓");
     setTimeout(()=>setCopyLabel("Ünvanı kopyala"),2500);
   };
+
+  // iOS Safari — prevent body bounce scroll
+  useEffect(()=>{
+    const prevent = (e)=>{
+      // Allow scroll inside invite-page and scratch canvas
+      if(e.target.closest('.invite-page')) return;
+      if(e.target.closest('#scratchWrap')) return;
+      e.preventDefault();
+    };
+    document.addEventListener('touchmove', prevent, {passive:false});
+    return ()=>document.removeEventListener('touchmove', prevent);
+  },[]);
 
   return (
     <>
